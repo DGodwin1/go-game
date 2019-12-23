@@ -1,7 +1,7 @@
 package main
 import (
 	"errors"
-		)
+	)
 
 // Creating global variables + board outside of any function. 
 // These variables are now accessible to all functions in this file.
@@ -36,14 +36,14 @@ func stringToLocation(s string) ([2]int, error) {
 	m1['4'] = 3
 	m1['5'] = 4
 
-	_, ok1 := m0[s[0]]
-	_, ok2 := m1[s[1]]
+	row, ok1 := m0[s[0]]
+	column, ok2 := m1[s[1]]
 	//if the ok value is false, it means the key (_) wasn't in the map.
 	if ok1 == false || ok2 == false {
 		return [2]int{-1,-1}, errors.New("You supplied a position that isn't on the board")
 	}
 
-	return [2]int{m0[s[0]],m1[s[1]]}, nil
+	return [2]int{row, column}, nil
 }
 
 func locationToString(location [2]int)(string){
