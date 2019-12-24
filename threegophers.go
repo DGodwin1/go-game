@@ -1,6 +1,7 @@
 package main
 import (
 	"errors"
+	"fmt"
 	)
 
 // Creating global variables + board outside of any function. 
@@ -46,11 +47,33 @@ func stringToLocation(s string) ([2]int, error) {
 	return [2]int{row, column}, nil
 }
 
-func locationToString(location [2]int)(string){
-	return ""
+func locationToString(location [2]int)(string, error){
+	//take a location array and return a concatenated string from the m0 and m1 maps. eg 0,0 -> A1.
+	m0 := make(map[int]string)
+	m1 := make(map[int]string)
+
+	m0[0] = "A"
+	m0[1] = "B"
+	m0[2] = "C"
+	m0[3] = "D"
+	m0[4] = "E"
+
+	m1[0] = "1"
+	m1[1] = "2"
+	m1[2] = "3"
+	m1[3] = "4"
+	m1[4] = "5"
+
+	row, ok1 := m0[location[0]]
+	column, ok2 := m1[location[1]]
+
+	if ok1 == false || ok2 == false{
+		return ":(", errors.New("You supplied a position that isn't on the board")
+	}
+	return row+column, nil
 }
 
 func main(){
+	fmt.Println("")
 	
 }
-
