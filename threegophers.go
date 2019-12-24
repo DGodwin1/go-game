@@ -1,21 +1,22 @@
 package main
+
 import (
 	"errors"
 	"fmt"
-	)
+)
 
-// Creating global variables + board outside of any function. 
+// Creating global variables + board outside of any function.
 // These variables are now accessible to all functions in this file.
 const g = "G" // a gopher character.
-const e = "E" // an enemy. 
+const e = "E" // an enemy.
 const s = "-" // a space on the board.
 
 // Board shouldn't be a const as you'll be adjusting it as you go.
-var board = [][]string {{e, e, e, e, g},
-				{e, e, e, e, e},
-				{e, e, g, e, e},
-				{e, e, e, e, e},
-				{g, e, e, e, e}}
+var board = [][]string{{e, e, e, e, g},
+	{e, e, e, e, e},
+	{e, e, g, e, e},
+	{e, e, e, e, e},
+	{g, e, e, e, e}}
 
 func stringToLocation(s string) ([2]int, error) {
 	//Takes a string s (eg "A1") and returns an integer array (eg [0,0])
@@ -30,7 +31,7 @@ func stringToLocation(s string) ([2]int, error) {
 	m0['C'] = 2
 	m0['D'] = 3
 	m0['E'] = 4
-	
+
 	m1['1'] = 0
 	m1['2'] = 1
 	m1['3'] = 2
@@ -41,13 +42,13 @@ func stringToLocation(s string) ([2]int, error) {
 	column, ok2 := m1[s[1]]
 	//if the ok value is false, it means the key (_) wasn't in the map.
 	if ok1 == false || ok2 == false {
-		return [2]int{-1,-1}, errors.New("You supplied a position that isn't on the board")
+		return [2]int{-1, -1}, errors.New("You supplied a position that isn't on the board")
 	}
 
 	return [2]int{row, column}, nil
 }
 
-func locationToString(location [2]int)(string, error){
+func LocationToString(location [2]int) (string, error) {
 	//take a location array and return a concatenated string from the m0 and m1 maps. eg 0,0 -> A1.
 	m0 := make(map[int]string)
 	m1 := make(map[int]string)
@@ -67,13 +68,19 @@ func locationToString(location [2]int)(string, error){
 	row, ok1 := m0[location[0]]
 	column, ok2 := m1[location[1]]
 
-	if ok1 == false || ok2 == false{
+	if ok1 == false || ok2 == false {
 		return ":(", errors.New("You supplied a position that isn't on the board")
 	}
-	return row+column, nil
+	return row + column, nil
 }
 
-func main(){
+func at(location [2]int) string {
+	//Return the contents of the board at the location provided.
+	//TODO: want to handle if the location argument is legitimate.
+	return board[location[0]][location[1]]
+}
+
+func main() {
 	fmt.Println("")
-	
+
 }
