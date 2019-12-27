@@ -19,7 +19,7 @@ var board = [][]string{{e, e, e, e, g},
 	{g, e, e, e, e}}
 
 func stringToLocation(s string) ([2]int, error) {
-	//Takes a string (eg "A1") and returns an integer array (eg [0 0])
+	//Takes a string (eg "A1") and returns an integer array (eg [0 	0])
 	m0 := make(map[byte]int)
 	m1 := make(map[byte]int)
 
@@ -109,11 +109,11 @@ func adjacentLocation(location [2]int, direction string) ([2]int, error){
 	} else if direction == "right"{
 		return [2]int{row, column+1}, nil
 	}
-	return location, errors.New(""
+	return location, errors.New("")
 }
 
 func main() {
-	fmt.Println("hi there")
-	fmt.Println(adjacentLocation([2]int{0,4},"down"))	
+	fmt.Println("")
+	
 
 }
