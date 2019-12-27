@@ -5,13 +5,13 @@ import (
 	"fmt"
 )
 
-// Creating global variables + board outside of any function.
+// Creating global variables + board.
 // These variables are now accessible to all functions in this file.
 const g = "G" // a gopher character.
 const e = "E" // an enemy.
 const s = "-" // a space on the board.
 
-// Board shouldn't be a const as you'll be adjusting it as you go.
+// Board shouldn't be a const. You'll be adjusting it as you go.
 var board = [][]string{{e, e, e, e, g},
 	{e, e, e, e, e},
 	{e, e, g, e, e},
@@ -19,13 +19,10 @@ var board = [][]string{{e, e, e, e, g},
 	{g, e, e, e, e}}
 
 func stringToLocation(s string) ([2]int, error) {
-	//Takes a string s (eg "A1") and returns an integer array (eg [0,0])
-
-	//declare some maps for position [0] and [1] from the string.
+	//Takes a string (eg "A1") and returns an integer array (eg [0 0])
 	m0 := make(map[byte]int)
 	m1 := make(map[byte]int)
 
-	//make the mapping
 	m0['A'] = 0
 	m0['B'] = 1
 	m0['C'] = 2
@@ -49,7 +46,10 @@ func stringToLocation(s string) ([2]int, error) {
 }
 
 func LocationToString(location [2]int) (string, error) {
-	//take a location array and return a concatenated string from the m0 and m1 maps. eg 0,0 -> A1.
+	err := isLegalLocation(location)
+	if err != nil{
+		return ":(", err
+	}
 	m0 := make(map[int]string)
 	m1 := make(map[int]string)
 
@@ -65,22 +65,55 @@ func LocationToString(location [2]int) (string, error) {
 	m1[3] = "4"
 	m1[4] = "5"
 
-	row, ok1 := m0[location[0]]
-	column, ok2 := m1[location[1]]
+	row := m0[location[0]]
+	column := m1[location[1]]
 
-	if ok1 == false || ok2 == false {
-		return ":(", errors.New("You supplied a position that isn't on the board")
-	}
 	return row + column, nil
 }
 
-func at(location [2]int) string {
-	//Return the contents of the board at the location provided.
-	//TODO: want to handle if the location argument is legitimate.
-	return board[location[0]][location[1]]
+func at(location [2]int) (string, error) {
+	err := isLegalLocation(location)
+	
+	if err != nil{
+		return ":(", err
+	}
+	
+	// Everything is okay. Let's return the board's contents.
+	return board[location[0]][location[1]], nil
+}
+
+func isLegalLocation(location [2]int) (error) {
+	if (location[0] >= 0 && location[0] <= 4) && (location[1] >= 0 && location[1] <= 4) {
+		return nil
+	}
+	return errors.New("You've supplied a position that isn't on the board")
+
+}
+
+func adjacentLocation(location [2]int, direction string) ([2]int, error){
+	//return the location next to (up, down, left, right) from the one supplied
+	err := isLegalLocation(location)
+	if err != nil{
+		return [2]int{-1,-1}, errors.New("You've supplied a position that isn't on the board")
+	}
+
+	row := location[0]
+	column := location[1]
+
+	if direction == "up"{
+		return [2]int{row-1, column}, nil
+	} else if direction == "down"{
+		return [2]int{row+1, column}, nil
+	} else if direction == "left"{
+		return [2]int{row, column-1}, nil
+	} else if direction == "right"{
+		return [2]int{row, column+1}, nil
+	}
+	return location, errors.New(""
 }
 
 func main() {
-	fmt.Println("")
+	fmt.Println("hi there")
+	fmt.Println(adjacentLocation([2]int{0,4},"down"))	
 
 }
