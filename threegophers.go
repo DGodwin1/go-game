@@ -195,25 +195,23 @@ func isLegalMove(location [2]int, direction string) (bool, error) {
 
 func hasOneMoveAvailable(location [2]int) (bool, error) {
 	//Tests whether the player at the location has at least one move available.
-	
+
 	//is the location legit to test?
 	_, err := isLegalLocation(location)
-	if err != nil{
+	if err != nil {
 		return false, err
 	}
 
-	
-	
 	directions := []string{"left", "right", "up", "down"}
-	for _, i := range(directions){
+	for _, i := range directions {
 		fmt.Println(location, i) //need to make sure that the adjacentlocation is legal.
 
 		//then check if the destination of the move is legit for the character.
 	}
 	return true, errors.New("hello")
-	
+
 }
-    
+
 func main() {
 	fmt.Println(hasOneMoveAvailable([2]int{0, 4}))
 	// fmt.Println(isLegalMoveByGopher([2]int{0, 4}, "right")) //can't do it.
