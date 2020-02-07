@@ -12,11 +12,16 @@ const e string = "E" // an enemy.
 const s string = "-" // a space on the board.
 
 // Board shouldn't be a const. You'll be adjusting it as you go.
-var board = [][]string{{e, e, e, e, g},
-	{e, s, e, e, e},
+var board = [][]string{{e, e, s, e, g},
+	{e, e, e, e, e},
 	{e, e, g, e, e},
 	{e, e, e, e, e},
 	{g, e, e, e, e}}
+
+type locationDirection struct {
+	location  [2]int
+	direction string
+}
 
 func StringToLocation(s string) ([2]int, error) {
 	//Takes a string (eg "A1") and returns an integer array (eg [0 	0])
@@ -154,7 +159,6 @@ func isLegalMoveByEnemy(location [2]int, direction string) (bool, error) {
 	if err != nil || character != "E" {
 		return false, err
 	}
-
 	//where does the enemy want to move?
 	eDest, err := adjacentLocation(location, direction)
 	if err != nil {
@@ -189,37 +193,42 @@ func isLegalMove(location [2]int, direction string) (bool, error) {
 	} else if character == "G" {
 		return isLegalMoveByGopher(location, direction)
 	} else {
-		return false, errors.New("hmmm. can't check if it's a legal move becuase it probably isn't a 'real' character.")
+		return false, errors.New("hmmm. can't check if it's a legal move. It's probably a \" \" character.")
 	}
 }
 
-func hasOneMoveAvailable(location [2]int) (bool, error) {
-	//Tests whether the player at the location has at least one move available.
-
-	//is the location legit to test?
+func AllPossibleMovesFor(location [2]int) ([]locationDirection, error) {
+	//the slice that I'll keep adding to
+	var my_slice = make([]locationDirection, 0)
 	_, err := isLegalLocation(location)
+
 	if err != nil {
-		return false, err
+		return my_slice, err
 	}
 
-	directions := []string{"left", "right", "up", "down"}
-	for _, i := range directions {
-		fmt.Println(location, i) //need to make sure that the adjacentlocation is legal.
+	directions := [4]string{"left", "right", "up", "down"}
+	//now figure out if you can move to the next location. Check you're fine, then it's a free move and you should append location[2] and a string to a list.
 
-		//then check if the destination of the move is legit for the character.
+	for _, direction := range directions {
+		adLoc, err := adjacentLocation(location, direction) //get the adjacent location
+		_, err = isLegalLocation(adLoc)                     //check if the adjacent location is a legal location or not
+		_, err = isLegalMove(location, direction)           //now check if the move from the current location into the adjacent one is legal or not
+		if err == nil {
+			// fmt.Println("the character at, location, "can move", direction)
+			fmt.Println("the following can move:")
+			acceptableLocation := locationDirection{location, direction}
+
+			fmt.Println(acceptableLocation)
+
+			my_slice = append(my_slice, acceptableLocation)
+		}
 	}
-	return true, errors.New("hello")
 
+	return my_slice, err
 }
 
 func main() {
-	fmt.Println(hasOneMoveAvailable([2]int{0, 4}))
-	// fmt.Println(isLegalMoveByGopher([2]int{0, 4}, "right")) //can't do it.
-	// fmt.Println(isLegalMoveByGopher([2]int{0, 4}, "left"))  //can do it.
-	// fmt.Println(isLegalMoveByGopher([2]int{0, 3}, "left"))  //nope. it's not a gopher
-	// fmt.Println(isLegalMoveByGopher([2]int{2, 2}, "up"))    //nope. it's not an enemy
-	// fmt.Println(isLegalMoveByEnemy([2]int{1, 1}, "right")) //yep.
-	// fmt.Println(isLegalMoveByEnemy([2]int{2, 2}, "right")) //nope it's a gopher
-	// fmt.Println(isLegalMoveByEnemy([2]int{0, 0}, "left")) //nope. you're going off the board.
-	// fmt.Println(isLegalMoveByEnemy([2]int{0, 0}, "left")) //nope. you're going off the board.
+	moves, error := AllPossibleMovesFor([2]int{0, 4})
+	fmt.Println(len(moves))
+	fmt.Println(error)
 }
